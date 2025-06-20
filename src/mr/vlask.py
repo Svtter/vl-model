@@ -1,10 +1,8 @@
 import base64
 
-from openai.types.shared_params import ResponseFormatJSONSchema
-from openai.types.shared_params.response_format_json_schema import JSONSchema
-
 from mr import LocationResposne
 from mr.prompt import MeterBoxPrompt
+from mr.tools import JSONFormatter
 from vl_model.client import get_client
 
 
@@ -33,14 +31,6 @@ class VlAsk(object):
           ],
         },
       ],
-      response_format=ResponseFormatJSONSchema(
-        json_schema=JSONSchema(
-          schema=LocationResposne.model_json_schema(),
-          name="location",
-          description="location of meter reading area",
-        ),
-        type="json_schema",
-      ),
     )
     content = response.choices[0].message.content or ""
     if content:

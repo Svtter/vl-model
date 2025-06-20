@@ -2,13 +2,12 @@ from vl_model.client import get_client
 
 
 class JSONFormatter(object):
-  def __init__(self, response):
+  def __init__(self):
     self.client = get_client()
-    self.response = response
 
-  def format_response(self, content):
+  def format_response(self, content: str) -> str:
     response = self.client.chat.completions.create(
-      model="gpt-4o-mini",
+      model="deepseek-ai/DeepSeek-V3",
       messages=[
         {
           "role": "system",
@@ -20,4 +19,4 @@ class JSONFormatter(object):
         },
       ],
     )
-    return response.choices[0].message.content
+    return response.choices[0].message.content or ""
