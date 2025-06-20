@@ -1,7 +1,7 @@
 from mr import MeterLocation
 
 
-def main():
+def batch_agent_eval():
   for model_name in [
     "openai/gpt-4o",
     "anthropic/claude-3.5-sonnet",
@@ -14,4 +14,4 @@ def main():
 
 
 if __name__ == "__main__":
-  main()
+  batch_agent_eval()

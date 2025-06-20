@@ -1,9 +1,8 @@
 # For meter reading location
 
-from PIL import Image, ImageDraw
 from pydantic import BaseModel
 
-from mr.prompt import BasePrompt, MeterBoxPrompt, TextBoxPrompt
+from mr.prompt import BasePrompt, MeterBoxPrompt
 from vl_model.client import build_agent
 
 
@@ -42,30 +41,12 @@ class MeterLocation(object):
 
   def show_image(self, image_path, output_image_path: str = "./tmp/cropped_image.png"):
     """point out the meter reading area on the image"""
+    from mr.clipper import Clipper
+
     result = self.read_image(image_path)
+    result_json: LocationResposne = result.output  # type: ignore
 
-    # draw a rectangle on the image
-    image = Image.open(image_path)
-
-    # 获取图像尺寸并验证坐标
-    img_width, img_height = image.size
-
-    # 确保坐标在有效范围内
-    left = max(0, min(result.output.top_left.x, img_width))
-    top = max(0, min(result.output.top_left.y, img_height))
-    right = max(0, min(result.output.bottom_right.x, img_width))
-    bottom = max(0, min(result.output.bottom_right.y, img_height))
-
-    # 确保裁剪区域有效
-    if right <= left or bottom <= top:
-      print("无效的裁剪区域")
-      return
-
-    cropped_image = image.crop((left, top, right, bottom))
-
-    # write the cropped image to a file
-    print(result.output)
-    cropped_image.save(output_image_path)
+    Clipper.clip(image_path, output_image_path, result_json)
 
 
 if __name__ == "__main__":

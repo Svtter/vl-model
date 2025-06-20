@@ -8,17 +8,35 @@ from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIModel
 from pydantic_ai.providers.openrouter import OpenRouterProvider
 
+from mr.group import ModelGroup, openrouter_group, siliconflow_group
+
 load_dotenv(find_dotenv())
 
 
 class Client(object):
   def __init__(self):
-    self.client = openai.OpenAI(
-      api_key=os.getenv("OPENAI_API_KEY"), base_url=os.getenv("OPENAI_BASE_URL")
-    )
-    self.async_client = openai.AsyncOpenAI(
-      api_key=os.getenv("OPENAI_API_KEY"), base_url=os.getenv("OPENAI_BASE_URL")
-    )
+    self.client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"), base_url=os.getenv("OPENAI_BASE_URL"))
+    self.async_client = openai.AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"), base_url=os.getenv("OPENAI_BASE_URL"))
+
+  def build_client(self, model_group: ModelGroup):
+    """build client for different model groups"""
+
+    # siliconflow
+    if model_group == siliconflow_group:
+      self.client = openai.OpenAI(api_key=os.getenv("SILICONFLOW_API_KEY"), base_url=os.getenv("SILICONFLOW_BASE_URL"))
+      self.async_client = openai.AsyncOpenAI(
+        api_key=os.getenv("SILICONFLOW_API_KEY"), base_url=os.getenv("SILICONFLOW_BASE_URL")
+      )
+    # openrouter
+    elif model_group == openrouter_group:
+      self.client = openai.OpenAI(api_key=os.getenv("OPENROUTER_API_KEY"), base_url=os.getenv("OPENROUTER_BASE_URL"))
+      self.async_client = openai.AsyncOpenAI(
+        api_key=os.getenv("OPENROUTER_API_KEY"), base_url=os.getenv("OPENROUTER_BASE_URL")
+      )
+    # others, not supported yet
+
+    else:
+      raise ValueError(f"Unsupported model group: {model_group}")
 
   def build_model(self, model_name: str):
     model = OpenAIModel(
