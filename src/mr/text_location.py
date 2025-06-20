@@ -1,4 +1,3 @@
-from PIL import Image, ImageDraw
 from pydantic import BaseModel
 
 from mr.prompt import TextBoxPrompt
@@ -7,9 +6,8 @@ from vl_model.client import build_agent
 
 class BoundingBox(BaseModel):
   """
-  {
-  "bbox_2d": [125, 169, 754, 208], "text_content": "UNIHAKKA INTERNATIONAL SDN BHD",
-  },
+  "bbox_2d": [125, 169, 754, 208],
+  "text_content": "UNIHAKKA INTERNATIONAL SDN BHD"
   """
 
   bbox_2d: list[int]
@@ -33,13 +31,8 @@ class TextLocation(object):
     return result
 
   def show_image(self, image_path, output_image_path: str = "./tmp/cropped_image.png"):
+    from mr.drawer import Drawer
+
     result = self.read_image(image_path)
-    image = Image.open(image_path)
-    draw = ImageDraw.Draw(image)
-
-    bounding_boxes: list[BoundingBox] = result.output.bounding_boxes
-
-    for bounding_box in bounding_boxes:
-      draw.rectangle(bounding_box.bbox_2d, outline="red", width=2)
-
-    image.save(output_image_path)
+    bounding_boxes: list[BoundingBox] = result.output.bounding_boxes  # type: ignore
+    Drawer.draw_bounding_boxes(image_path, bounding_boxes, output_image_path)

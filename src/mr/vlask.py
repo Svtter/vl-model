@@ -76,8 +76,3 @@ class VlAsk(object):
       return TextLocationResponse.model_validate_json(content)
     else:
       raise ValueError("No content")
-
-
-if __name__ == "__main__":
-  vlask = VlAsk(siliconflow_group)
-  vlask.ask("./resources/meter-2.jpg")
