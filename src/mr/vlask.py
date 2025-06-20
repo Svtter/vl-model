@@ -9,7 +9,7 @@ from vl_model.client import get_client
 
 
 class VlAsk(object):
-  """用于使用不支持 tool 的模型，进行多轮对话。"""
+  """Used for vision models that do not support tools, which pydantic-ai does not support."""
 
   def __init__(self, model_group: ModelGroup):
     self.client = get_client()
