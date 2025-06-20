@@ -13,12 +13,8 @@ load_dotenv(find_dotenv())
 
 class Client(object):
   def __init__(self):
-    self.client = openai.OpenAI(
-      api_key=os.getenv("OPENAI_API_KEY"), base_url=os.getenv("OPENAI_BASE_URL")
-    )
-    self.async_client = openai.AsyncOpenAI(
-      api_key=os.getenv("OPENAI_API_KEY"), base_url=os.getenv("OPENAI_BASE_URL")
-    )
+    self.client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"), base_url=os.getenv("OPENAI_BASE_URL"))
+    self.async_client = openai.AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"), base_url=os.getenv("OPENAI_BASE_URL"))
 
   def build_model(self, model_name: str):
     model = OpenAIModel(
